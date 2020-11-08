@@ -24,7 +24,7 @@ input[type=checkbox]{
 }
 
 .input-label {
-    margin-left:3.5rem
+    margin-left:1.5rem !important
 }
 
 </style>
