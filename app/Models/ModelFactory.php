@@ -11,8 +11,12 @@ class ModelFactory{
     public  $Course;
 
     public  $CourseReg;
+    
+    public $ForensicData;
 
-   public function __construct() {  
+   public function __construct() { 
+        $this->ForensicData = new ForensicData;   
+    
         $this->Member = new Member;
 
         $this->Department = new Department;

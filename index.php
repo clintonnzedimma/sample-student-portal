@@ -23,12 +23,15 @@ $app->get('/register', [$middleware->autoLogin, $homeController->SignupPage]);
 
 $app->get('/portal/home', [$middleware->authStudent, $homeController->PortalHome]);
 $app->get('/portal/course-reg', [$middleware->authStudent, $homeController->CourseRegisteration]);
+$app->get('/forensic/login', [$homeController->ForensicHome]);
+$app->get('/forensic/log', [$homeController->ForensicLog]);
 
 /* api */
 $app->post('/api/member/create', $apiController->registerMember);
 $app->post('/api/member/login', $apiController->loginMember);
 $app->post('/api/course/register', [$apiController->registerCourse]);
 $app->post('/api/user/change-passport', [$apiController->uploadPassport]);
+$app->post('/api/forensic/login', [$apiController->forensicLogin]);
 
 $app->get('/logout', $middleware->logout);
 

@@ -13,6 +13,7 @@ class BaseController extends WoskiController
     public $Course;
     public $CourseReg;
     public $Department;
+    public $ForensicData;
     
     
     function __construct() {
@@ -22,8 +23,7 @@ class BaseController extends WoskiController
         $this->Course = $this->ModelFactory->Course;
         $this->CourseReg = $this->ModelFactory->CourseReg;
         $this->Department = $this->ModelFactory->Department;
-
-
+        $this->ForensicData = $this->ModelFactory->ForensicData;
     }
 
 

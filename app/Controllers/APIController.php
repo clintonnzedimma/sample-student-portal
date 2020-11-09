@@ -81,10 +81,17 @@ class APIController extends BaseController
                         "address" => $_POST['address'], 
                         "type" => $_POST['type'],
                         'password'  => password_hash($_POST['password'], PASSWORD_DEFAULT)
-            
                     ]);
                     
                     if($query) {
+                        // log forensic
+                        $this->ForensicData->create([
+                            "id" => NULL,
+                            "message"=>  $_POST['firstName']." ".$_POST['surname']." just registered as a ".$_POST['type'],
+                            "type" => "MEMBER_REGISTERATION",
+                            "createdAt" => time()
+                        ]);
+
                          return $res->json(["message" => "Registeration successful", "status" => true]);
                     }
                    
@@ -133,7 +140,7 @@ class APIController extends BaseController
             
             
                 if(count($member) ==  0) {
-                    $res->json(["message" => "User doesnt exists", "status" => false]);
+                    return $res->json(["message" => "User doesnt exists", "status" => false]);
                 }
             
                 if(password_verify($_POST['password'],$member['password'] )) {
@@ -141,6 +148,16 @@ class APIController extends BaseController
                     // assigning session
                     $_SESSION['email'] = $member['email'];
                     $res->json(["message" => "Login Successful", "status" => true]);
+                } else {
+                    // log forensic
+                    $this->ForensicData->create([
+                        "id" => NULL,
+                        "message"=> "Attempted but failed login on user ".$member['email'].".",
+                        "type" => "FAILED_LOGIN",
+                        "createdAt" => time()
+                    ]);
+
+                    return$res->json(["message" => "Wrong password", "status" => false]);
                 }
         };     
      }
@@ -148,6 +165,12 @@ class APIController extends BaseController
 
      public function registerCourse() {
 		return function ($req, $res) {
+
+            $member = $this->Member->findOneWhere(
+                [
+                    "id" => $_POST['memberId']
+                ]);
+
             $count_query = 0;
             foreach ($_POST['courseId'] as $courseId) {
                 $course = $this->Course->findOneWhere(["id"=>$courseId]);
@@ -165,6 +188,15 @@ class APIController extends BaseController
             }
 
            if($count_query == count($_POST['courseId']) ){
+                    // log forensic
+                    $this->ForensicData->create([
+                        "id" => NULL,
+                        "message"=> $member['firstName']. " ".$member['surname']." just registered courses",
+                        "type" => "COURSE_REGISTERATION",
+                        "createdAt" => time()
+                    ]);
+
+
                 $res->json(["message" => "All selected courses registered successfully", "status" => true ]);
            }
 		};
@@ -223,5 +255,21 @@ class APIController extends BaseController
                 
  
         };     
-     }    
+     } 
+     
+     public function forensicLogin() {
+		return function ($req, $res) {
+            if($_POST['username'] == "admin" && $_POST['password'] == "123") {
+                $res->json(
+                    [
+                        "message" => "Login successful", "status" =>  true
+                    ]);
+            }else {
+                $res->json(
+                    [
+                        "message" => "Login failed", "status" =>  false
+                    ]);
+            }
+		};
+    }     
 }

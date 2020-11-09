@@ -101,6 +101,35 @@ class AppController extends BaseController
 		};
 	}
 
+
+	
+	public function ForensicHome() {
+		return function ($req, $res) {
+		   	 $res->render("forensic_login", 
+		        [
+		            "title"=>"FORENSIC LOGIN"
+		        ]);			
+		};
+	}
+
+	public function ForensicLog() {
+		return function ($req, $res) {
+			$logs = $this->ForensicData->findAllWhere();
+
+			
+			foreach($logs as $key => $log) {
+				echo "> Log: ". date("Y-m-d H:ia",$log['createdAt']);
+				echo "<br>";
+				echo $log['message'];
+				echo "<br>";
+				echo "<br>";
+				echo "<br>";
+			}
+			
+			
+		};
+	}
+
 	
 }
 
