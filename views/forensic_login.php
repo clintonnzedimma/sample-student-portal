@@ -311,7 +311,7 @@ function submitForm () {
 
 
  $.ajax({          
-   url: "api/forensic/login",
+   url: "/api/forensic/login",
    type:"POST",
    data : formData,
    contentType: false,

@@ -106,6 +106,14 @@ class APIController extends BaseController
         return function ($req, $res) { 
             $validator = new Validator;
 
+            $ip_address = getenv('HTTP_CLIENT_IP')?:
+            getenv('HTTP_X_FORWARDED_FOR')?:
+            getenv('HTTP_X_FORWARDED')?:
+            getenv('HTTP_FORWARDED_FOR')?:
+            getenv('HTTP_FORWARDED')?:
+            getenv('REMOTE_ADDR');
+                   
+
             $validation = $validator->make($_POST + $_FILES, [
                 "email" => 'required|email',
                 'password'  => 'required|min:5',
@@ -152,7 +160,7 @@ class APIController extends BaseController
                     // log forensic
                     $this->ForensicData->create([
                         "id" => NULL,
-                        "message"=> "Attempted but failed login on user ".$member['email'].".",
+                        "message"=> "Attempted but failed login on user ".$member['email'].". Device IP address :$ip_address",
                         "type" => "FAILED_LOGIN",
                         "createdAt" => time()
                     ]);
@@ -260,6 +268,8 @@ class APIController extends BaseController
      public function forensicLogin() {
 		return function ($req, $res) {
             if($_POST['username'] == "admin" && $_POST['password'] == "123") {
+                $_SESSION['admin'] = $_POST['username'];
+
                 $res->json(
                     [
                         "message" => "Login successful", "status" =>  true

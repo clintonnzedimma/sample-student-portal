@@ -24,7 +24,7 @@ $app->get('/register', [$middleware->autoLogin, $homeController->SignupPage]);
 $app->get('/portal/home', [$middleware->authStudent, $homeController->PortalHome]);
 $app->get('/portal/course-reg', [$middleware->authStudent, $homeController->CourseRegisteration]);
 $app->get('/forensic/login', [$homeController->ForensicHome]);
-$app->get('/forensic/log', [$homeController->ForensicLog]);
+$app->get('/forensic/log', [$middleware->authAdmin,$homeController->ForensicLog]);
 
 /* api */
 $app->post('/api/member/create', $apiController->registerMember);

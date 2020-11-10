@@ -19,6 +19,19 @@ class Middleware extends WoskiController
 	}
 
 
+
+	
+    public function authAdmin() {
+		return function ($req, $res, $pipe) {
+               if(!isset($_SESSION['admin'])) {
+				   header("Location:/forensic/login");
+                   return $pipe->block();
+               }
+
+		};
+	}
+
+
 	public function autoLogin() {
 		return function ($req, $res, $pipe) {
 			   if(isset($_SESSION['email'])) {
@@ -36,8 +49,6 @@ class Middleware extends WoskiController
 				   session_destroy();
 				   header("Location:/login?o");
 				   return $pipe->block();
-			   
-	
 		};
 	}
 
