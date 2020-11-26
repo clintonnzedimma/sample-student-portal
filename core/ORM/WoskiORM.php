@@ -17,13 +17,13 @@ use Prophecy\Exception\Doubler\ClassNotFoundException;
 
 abstract class WoskiORM extends AbstractDatabase
 {
-	protected $table;
+  protected $table;
 
-	protected $fields = [];
+  protected $fields = [];
 
-	protected $sql;
+  protected $sql;
 
-	protected $pk;
+  protected $pk;
 
     private $where;
 
@@ -42,12 +42,12 @@ abstract class WoskiORM extends AbstractDatabase
     
 
 
-	function __construct()
-	{
-		 parent::__construct();
+  function __construct()
+  {
+     parent::__construct();
          $this->validatePK(); 
          $this->reflection = new ReflectionClass($this);      
-	}
+  }
 
 
 
@@ -56,12 +56,12 @@ abstract class WoskiORM extends AbstractDatabase
    * @method getTableFields
    * @return array
    */
-	protected function getTableFields() {
+  protected function getTableFields() {
         $sql = "SELECT column_name FROM information_schema.columns WHERE table_name =?";
         $stm = $this->pdo->prepare($sql);
         $stm->execute([$this->table]);
        return $stm->fetchAll(PDO::FETCH_COLUMN);
-	}
+  }
 
 
   /**
@@ -69,25 +69,25 @@ abstract class WoskiORM extends AbstractDatabase
    * @method fieldsCompare
    * @return null
    */
-	protected function fieldsCompare(){
-		$invalid_table_fields = array_diff($this->fields, $this->getTableFields());
-		if (count($invalid_table_fields) > 0) {
-			throw new Exception("WoskiORM: The field [".implode(", ",$invalid_table_fields)."] are not in the '$this->table' table  in {$this->reflection->getShortName()} model");
-		}
-	}
+  protected function fieldsCompare(){
+    $invalid_table_fields = array_diff($this->fields, $this->getTableFields());
+    if (count($invalid_table_fields) > 0) {
+      throw new Exception("WoskiORM: The field [".implode(", ",$invalid_table_fields)."] are not in the '$this->table' table  in {$this->reflection->getShortName()} model");
+    }
+  }
 
   /**
    * This method validates primary key
    * @method validatePK
    * @return null
    */
-	protected function validatePK(){
-		$is_validated = array_search($this->pk, $this->fields);
+  protected function validatePK(){
+    $is_validated = array_search($this->pk, $this->fields);
 
-		if (!$this->pk) throw new Exception("WoskiORM: Please set primary key in {$this->reflection->getShortName()} model"); 
+    if (!$this->pk) throw new Exception("WoskiORM: Please set primary key in {$this->reflection->getShortName()} model"); 
 
-		if($is_validated === false) throw new Exception("WoskiORM: Field '$this->pk' does not exists in the fields declared  in {$this->reflection->getShortName()} model"); 
-	}
+    if($is_validated === false) throw new Exception("WoskiORM: Field '$this->pk' does not exists in the fields declared  in {$this->reflection->getShortName()} model"); 
+  }
 
   /**
    * This method prepares values for binding
@@ -109,7 +109,7 @@ abstract class WoskiORM extends AbstractDatabase
    * @method where
    * @return string
    */
-    private function where($separator = "AND")
+    private function where($separator = " AND ")
     {
         return $this->where = (isset($this->data['conditions']))
                                 ? 'WHERE ' . self::conditions($separator)
@@ -190,19 +190,19 @@ abstract class WoskiORM extends AbstractDatabase
    * @method create
    * @return object
    */
-	public function create($data) {
-		$this->data = $data;
-		$this->stmt = $this->pdo->prepare(self::insertQueryString());
-		self::bindParam($data);
+  public function create($data) {
+    $this->data = $data;
+    $this->stmt = $this->pdo->prepare(self::insertQueryString());
+    self::bindParam($data);
 
-		$exec = $this->stmt->execute();
+    $exec = $this->stmt->execute();
 
-		$this->count = $this->stmt->rowCount();
+    $this->count = $this->stmt->rowCount();
 
-		return (object) [
+    return (object) [
             "result" => ($this->count > 0) ? true : false,
             "status" => $exec
-		];
+    ];
     }
     
 
@@ -213,7 +213,7 @@ abstract class WoskiORM extends AbstractDatabase
    * @return string
    */
 
-    public function delete($data, $separator = "AND")
+    public function delete($data, $separator = " AND ")
     {
         $this->data['conditions'] = $data['WHERE'];
 
@@ -227,10 +227,10 @@ abstract class WoskiORM extends AbstractDatabase
         $exec = $this->stmt->execute();
         $this->count = $this->stmt->rowCount();
 
-		return (object) [
+    return (object) [
             "result" => ($this->count > 0) ? true : false,
             "status" => $exec
-		];       
+    ];       
     }
 
  /**
@@ -259,7 +259,7 @@ abstract class WoskiORM extends AbstractDatabase
         $exec = $this->stmt->execute();
         $this->count = $this->stmt->rowCount();
 
-       	return (object) [
+        return (object) [
                "result" => ($this->count > 0) ? true : false,
                "status" => $exec
        ];             
@@ -306,6 +306,7 @@ abstract class WoskiORM extends AbstractDatabase
 
         $sql = "SELECT " . self::fields() . " FROM {$this->table} " . self::where()." ". $this->structureSortString();
 
+   
         $this->stmt = $this->pdo->prepare($sql);
 
         if (!empty($this->where)) {
