@@ -8,6 +8,8 @@ use Woski\Controller\WoskiController;
 class AppController extends BaseController
 {	
 
+
+
 	public function index() {
 		return function ($req, $res) {
 		   	 $res->render("index", 
